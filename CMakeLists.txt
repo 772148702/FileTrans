@@ -14,6 +14,10 @@ list(APPEND HANDY_SRCS
         ${PROJECT_SOURCE_DIR}/handy/logging.cpp
         ${PROJECT_SOURCE_DIR}/handy/port_posix.cpp
         ${PROJECT_SOURCE_DIR}/handy/util.cpp
+        ${PROJECT_SOURCE_DIR}/handy/eventBase.cpp
+        ${PROJECT_SOURCE_DIR}/handy/server.cpp
+        ${PROJECT_SOURCE_DIR}/handy/poller.cpp
+        ${PROJECT_SOURCE_DIR}/handy/threads.cpp
         )
 
 if(CMAKE_HOST_APPLE)
@@ -52,6 +56,10 @@ if(BUILD_HANDY_SHARED_LIBRARY OR BUILD_HANDY_STATIC_LIBRARY)
             ${PROJECT_SOURCE_DIR}/handy/logging.cpp
             ${PROJECT_SOURCE_DIR}/handy/port_posix.cpp
             ${PROJECT_SOURCE_DIR}/handy/util.cpp
+            ${PROJECT_SOURCE_DIR}/handy/eventBase.cpp
+            ${PROJECT_SOURCE_DIR}/handy/server.cpp
+            ${PROJECT_SOURCE_DIR}/handy/poller.cpp
+            ${PROJECT_SOURCE_DIR}/handy/threads.cpp
             DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/handy)
 endif(BUILD_HANDY_SHARED_LIBRARY OR BUILD_HANDY_STATIC_LIBRARY)
 
@@ -73,8 +81,12 @@ endfunction()
 
 if(BUILD_HANDY_TEST)
 
-    add_hand_test_executable(test_port test/test_port.cc)
+    add_hand_test_executable(test_port   test/test_port.cc)
     add_hand_test_executable(test_buffer test/test_buffer.cc)
+    add_hand_test_executable(test_server test/test_server.cc)
+    add_hand_test_executable(test_multi  test/test_multi.cc)
+    add_hand_test_executable(test_thread test/test_thread.cc)
+    add_hand_test_executable(test_threadPoll test/test_threadPoll.cc)
 endif(BUILD_HANDY_TEST)
 
 add_handy_executable(epoll raw-examples/epoll.cpp)

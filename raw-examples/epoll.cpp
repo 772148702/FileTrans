@@ -81,14 +81,16 @@ struct EventLoop {
                         int newFd = accept(listenfd, (struct sockaddr *) &raddr, &rsz);
                         net::setNonBlock(newFd,true);
                         epoll_event ev;
-                        TcpConnection conn;
-                        conn.Attach(newFd,raddr,raddr);
-                        AddEpoll(efd, newFd, ev,conn.m_pChannel.get());
-                        info("new connection address:%s", conn.m_peer.ToString().c_str());
+                        typedef std::shared_ptr<handy::TcpConnection> TcpConnPtr;
+                        TcpConnPtr conn(new TcpConnection());
+                        conn->Attach(newFd,raddr,raddr);
+                        AddEpoll(efd, newFd, ev,conn->m_pChannel);
+                        info("new connection address:%s", conn->m_peer.ToString().c_str());
 
                     }
               } else {
                   if(curEv.events&&EPOLLIN) {
+                      ch->HandleRead();
 
 
                   }
