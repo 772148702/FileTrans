@@ -4,6 +4,7 @@
 
 #include "conn.h"
 #include "net.h"
+#include "fcntl.h"
 #include <atomic>
 namespace  handy {
 
@@ -33,13 +34,14 @@ namespace  handy {
             m_inbuffer.MakeRoom();
             rc = 0;
             if(m_pChannel->Fd()>=0) {
-                rc = read(fd, m_inbuffer.Begin(), m_inbuffer.Space());
+                rc = read(fd, m_inbuffer.End(), m_inbuffer.Space());
                 trace("channel %lld fd %d readed %d bytes", (long long) m_pChannel->m_id, m_pChannel->Fd(), rc);
             }
             if(rc==-1&&(errno == EINTR)) {
                 continue;
             } else if(rc==-1 &&(errno == EAGAIN || errno == EWOULDBLOCK)) {
-                m_readCB(conn);
+                if(m_readCB)
+                     m_readCB(conn);
                 return;
             } else if(m_pChannel->Fd() == -1 || rc == 0 || rc == -1) {
                 CleanUp(conn);
@@ -72,7 +74,7 @@ namespace  handy {
                 if(m_pChannel->WriteEnable()) {
                     m_outbuffer.Absorb(buf);
                 }
-                //之后的内容不知道作用
+                //如果是m_outbuffer自己
                 if(buf.Size()) {
                     ssize_t sended = Isend(buf.Begin(), buf.Size());
                     buf.Consume(sended);
@@ -140,6 +142,42 @@ namespace  handy {
             warn("connection %s - %s closed, but still writing %lu bytes", m_local.ToString().c_str(), m_peer.ToString().c_str(), len);
         }
     }
+
+
+
+    void TcpConnection::Connect(EventBase *base, const std::string &host, unsigned short port, int timeout,
+                                const std::string &localip) {
+            Ip4Addr addr(host,port);
+            int fd = socket(AF_INET,SOCK_STREAM,0);
+            fatalif(fd < 0, "socket failed %d %s", errno, strerror(errno));
+            net::setNonBlock(fd);
+            int t = util::addFdFlag(fd, FD_CLOEXEC);
+            fatalif(t, "addFdFlag FD_CLOEXEC failed %d %s", t, strerror(t));
+            int r = 0;
+            if (localip.size()) {
+                Ip4Addr addr(localip, 0);
+                r = ::bind(fd, (struct sockaddr *) &addr.GetAddr(), sizeof(struct sockaddr));
+                error("bind to %s failed error %d %s", addr.ToString().c_str(), errno, strerror(errno));
+            }
+            if (r == 0) {
+                r = ::connect(fd, (sockaddr *) &addr.GetAddr(), sizeof(sockaddr_in));
+                if (r != 0 && errno != EINPROGRESS) {
+                    error("connect to %s error %d %s", addr.ToString().c_str(), errno, strerror(errno));
+                }
+            }
+            sockaddr_in local;
+            socklen_t alen = sizeof(local);
+            if (r == 0) {
+                r = getsockname(fd, (sockaddr *) &local, &alen);
+                if (r < 0) {
+                    error("getsockname failed %d %s", errno, strerror(errno));
+                }
+            }
+
+           Attach(base, fd, Ip4Addr(local), addr);
+    }
+
+
 
 
     void handy::Channel::HandleRead() {

@@ -18,7 +18,14 @@ list(APPEND HANDY_SRCS
         ${PROJECT_SOURCE_DIR}/handy/server.cpp
         ${PROJECT_SOURCE_DIR}/handy/poller.cpp
         ${PROJECT_SOURCE_DIR}/handy/threads.cpp
+        ${PROJECT_SOURCE_DIR}/fileSC/common.h
+        ${PROJECT_SOURCE_DIR}/fileSC/fileServer.cpp
+        ${PROJECT_SOURCE_DIR}/fileSC/fileClient.cpp
+        ${PROJECT_SOURCE_DIR}/fileSC/file.cpp
+
         )
+
+
 
 if(CMAKE_HOST_APPLE)
     add_definitions(-DOS_MACOSX)
@@ -78,15 +85,19 @@ function(add_hand_test_executable EXECUTABLE_NAME EXECUTABLE_SOURCES)
     install(TARGETS ${EXECUTABLE_NAME} DESTINATION ${CMAKE_INSTALL_BINDIR})
 endfunction()
 
+add_handy_executable(serverMain fileSC/servermain.cpp)
 
 if(BUILD_HANDY_TEST)
-
     add_hand_test_executable(test_port   test/test_port.cc)
     add_hand_test_executable(test_buffer test/test_buffer.cc)
     add_hand_test_executable(test_server test/test_server.cc)
     add_hand_test_executable(test_multi  test/test_multi.cc)
     add_hand_test_executable(test_thread test/test_thread.cc)
     add_hand_test_executable(test_threadPoll test/test_threadPoll.cc)
+    add_hand_test_executable(test_client test/test_client.cc)
+    add_hand_test_executable(test_file test/test_file.cc)
+    add_hand_test_executable(test_fileServer test/test_fileServer.cc)
+    add_hand_test_executable(test_fileClient test/test_fileClient.cc)
 endif(BUILD_HANDY_TEST)
 
 add_handy_executable(epoll raw-examples/epoll.cpp)

@@ -62,8 +62,9 @@ namespace handy {
                 }
                 if(m_connectionCb) {
                     conn->SetConnCb(m_connectionCb);
+                    m_connectionCb(conn);
                 }
-                 m_connectionCb(conn);
+
             };
             if(b==m_base) {
                 addcon();

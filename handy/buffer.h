@@ -111,8 +111,34 @@ struct Buffer {
 
     template <class T>
     Buffer & AppendValue(const T &v) {
-        Append((const char*)&v,sizeof v);
+        Append((const char*)&v,sizeof( T));
         return *this;
+    }
+    template <class T>
+    bool PopValue(const T& v) {
+        if(Size()>=sizeof(v)) {
+            memcpy((char*)&v,Begin(),sizeof(v));
+
+                    { Consume(sizeof(v));   }
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+
+    bool PopString( std::string str) {
+        int stringSize;
+        if(Size()<sizeof(int)) {
+            return false;
+        } else {
+            memcpy((char*)&stringSize,Begin(),sizeof(int));
+            if(stringSize>Size()- sizeof(int)) return false;
+            Consume(sizeof(int));
+            str.append(Data(),stringSize);
+            Consume(stringSize);
+            return true;
+        }
     }
     void Clear() {
         delete [] m_data;

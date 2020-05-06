@@ -5,6 +5,7 @@
 
 
 
+#include <fileSC/common.h>
 #include "test_harness.h"
 #include "handy/net.h"
 #include "handy/logging.h"
@@ -49,4 +50,42 @@ TEST(test::TestBase,Buffer2)
     buf.Append(s.c_str());
     buf.Consume(500);
     info("%s",buf.ToString().c_str());
+}
+
+TEST(test::TestBase,Buffer3)
+{
+    //2*4+13=21
+    Buffer buf;
+    int size = 2*sizeof(int);
+    char * ch = "hello buffer!";
+
+    size+=strlen(ch);
+    size = 48126;
+    buf.AppendValue<int>(size);
+    buf.AppendValue<int>(Op::FilePut);
+    buf.Append(ch,strlen(ch));
+    info("size of Op %d",sizeof(Op));
+    int* temp = (int*) buf.Begin();
+    ASSERT_EQ(*temp,size);
+    int k;
+    buf.PopValue<int>(k);
+    info("buffer Popvalue %d",k);
+
+    Op op;
+    buf.PopValue<Op>(op);
+    info("buffer Popvalue %d",op);
+    std::string str(buf.Begin(),size-sizeof(int)*2);
+    info("data: %s!",str.c_str());
+}
+
+TEST(test::TestBase,Buffer4) {
+    Buffer buf;
+    std::string str={"32   1"};
+    int size =  str.size();
+    buf.AppendValue<int>(size);
+    buf.Append(str.c_str());
+    std::string pp;
+    buf.PopString(pp);
+    info("%s",pp.c_str());
+
 }

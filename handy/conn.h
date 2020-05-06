@@ -79,6 +79,14 @@ namespace  handy {
     struct TcpConnection:public std::enable_shared_from_this<TcpConnection>, private noncopyable {
         void Attach(EventBase *base,int fd,Ip4Addr local, Ip4Addr peer);
         void HandleConnection(const TcpConnPtr &conn);
+
+        void Connect(EventBase *base, const std::string &host, unsigned short port, int timeout, const std::string &localip);
+        template <class C = TcpConnection>
+        static TcpConnPtr CreateConnection(EventBase *base, const std::string &host, unsigned short port, int timeout = 0, const std::string &localip = ""){
+            TcpConnPtr conn(new C);
+            conn->Connect(base,host,port,timeout,localip);
+            return conn;
+        }
         void HandleWrite(const TcpConnPtr &conn);
         void HandleRead(const TcpConnPtr &conn);
         void Send(Buffer &msg);
@@ -94,6 +102,8 @@ namespace  handy {
         Ip4Addr m_local,m_peer;
         Channel* m_pChannel;
         TcpCallBack  m_readCB,m_writeCb,m_connCb,m_disconnectCb;
+
+
     };
 
 }
