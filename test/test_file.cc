@@ -3,6 +3,7 @@
 //
 
 #include <fileSC/file.h>
+#include <fileSC/common.h>
 #include "test_harness.h"
 #include "handy/net.h"
 #include "handy/logging.h"
@@ -35,4 +36,25 @@ TEST(test::TestBase,File)
     fil2.Read(buffer1,size);
     fil2.Close();
     info("buffer1: %s %d",buffer1.Data(),size);
+}
+TEST(test::TestBase,fielNotExt) {
+    File file("testf1ile","rb");
+    ASSERT_EQ(false,file.IsExist());
+    File file2("testfile","wb");
+    ASSERT_EQ(true,file2.IsExist());
+}
+
+TEST(test::TestBase,Dir) {
+    std::string out;
+    LsCurDir(out);
+    info("%s",out.c_str());
+}
+
+TEST(test::TestBase,ChangeDirAndPrint) {
+    ChangeDir("CMakeFiles");
+    std::string out;
+    PrintCurDir(out);
+    info("%s",out.c_str());
+    LsCurDir(out);
+    info("%s",out.c_str());
 }

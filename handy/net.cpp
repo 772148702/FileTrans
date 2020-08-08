@@ -24,6 +24,7 @@ namespace handy {
         return fcntl(fd,F_SETFD,flags&~O_NONBLOCK);
     }
 
+
     int net::setReuseAddr(int fd, bool value) {
             int flag = value;
             int len = sizeof flag;

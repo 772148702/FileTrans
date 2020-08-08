@@ -43,7 +43,7 @@ TEST(test::TestBase,ThreadPool)
     }
     usleep(100 * 1000);
     pool2.Exit();
-    pool2.Jin();
-    ASSERT_EQ(addoed, processed);
+    pool2.Join();
+    ASSERT_EQ(added, processed);
 
 }

@@ -22,7 +22,6 @@ list(APPEND HANDY_SRCS
         ${PROJECT_SOURCE_DIR}/fileSC/fileServer.cpp
         ${PROJECT_SOURCE_DIR}/fileSC/fileClient.cpp
         ${PROJECT_SOURCE_DIR}/fileSC/file.cpp
-
         )
 
 
@@ -98,9 +97,13 @@ if(BUILD_HANDY_TEST)
     add_hand_test_executable(test_file test/test_file.cc)
     add_hand_test_executable(test_fileServer test/test_fileServer.cc)
     add_hand_test_executable(test_fileClient test/test_fileClient.cc)
+    add_hand_test_executable(test_clientCommander test/test_clientCommander.cpp)
 endif(BUILD_HANDY_TEST)
 
-add_handy_executable(epoll raw-examples/epoll.cpp)
+#configure_file(test_clientCommander  ${PROJECT_SOURCE_DIR}/bin/client  COPYONLY)
+#configure_file(test_fileServer  ${PROJECT_SOURCE_DIR}/bin/server  COPYONLY)
+
+##add_handy_executable(epoll raw-examples/epoll.cpp)
 
 if(BUILD_HANDY_EXAMPLES)
 endif(BUILD_HANDY_EXAMPLES)

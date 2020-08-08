@@ -85,7 +85,7 @@ TEST(test::TestBase,Buffer4) {
     buf.AppendValue<int>(size);
     buf.Append(str.c_str());
     std::string pp;
-    buf.PopString(pp);
+    int i;
+    buf.PopString(pp,i);
     info("%s",pp.c_str());
-
 }

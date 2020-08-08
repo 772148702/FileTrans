@@ -11,6 +11,7 @@
 struct File {
     File(char* path, const char* mode);
     ~File();
+    bool IsExist();
     void Read(Buffer &buffer, int &size);
     void Write(Buffer& buffer,int size);
     void Close();

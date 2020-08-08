@@ -17,6 +17,8 @@ struct FileServer: public TcpServer {
     void FilePutRes(TcpConnPtr conn,std::string path,int len);
     void FileGetReq(TcpConnPtr conn,std::string  filename);
     void FileGetRes(TcpConnPtr conn,std::string filename);
+    void DirLs(TcpConnPtr conn);
+    void SendMessage(TcpConnPtr conn,std::string message);
 
 public:
     static std::shared_ptr<FileServer> StartServer(EventBases *bases, const std::string &host, unsigned short port, bool reusePort=true);

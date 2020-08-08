@@ -125,9 +125,15 @@ struct Buffer {
             return false;
         }
     }
-
-
-    bool PopString( std::string str) {
+    //pop string in buffer of format / string/
+    bool PopStringWithoutDataLength(std::string& str,int size) {
+        if(Size()<size) return false;
+        str.append(Begin(),size);
+        Consume(size);
+        return true;
+    }
+    //pop string in buffer of format / length string/
+    bool PopString( std::string& str,int& size) {
         int stringSize;
         if(Size()<sizeof(int)) {
             return false;
@@ -135,8 +141,10 @@ struct Buffer {
             memcpy((char*)&stringSize,Begin(),sizeof(int));
             if(stringSize>Size()- sizeof(int)) return false;
             Consume(sizeof(int));
+            size -= sizeof(int);
             str.append(Data(),stringSize);
             Consume(stringSize);
+            size -= stringSize;
             return true;
         }
     }

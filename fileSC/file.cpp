@@ -6,6 +6,8 @@
 
 File::File(char *path, const char *mode) {
     m_file = fopen(path, mode);
+
+
 }
 
 void File::Read(Buffer &buffer,int& size) {
@@ -30,4 +32,11 @@ File::~File() {
 
 void File::Close() {
     fclose(m_file);
+}
+
+bool File::IsExist() {
+    if(m_file== nullptr) {
+        return false;
+    }
+    return true;
 }

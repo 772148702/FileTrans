@@ -16,7 +16,7 @@ using namespace handy::port;
 TEST(test::TestBase,FileServer)
 {
     MultiBase base(4);
-    std::shared_ptr<FileServer> svr = FileServer::StartServer(&base, "", 8080);
+    std::shared_ptr<FileServer> svr = FileServer::StartServer(&base, "", 8081);
     exitif(svr == NULL, "start tcp server failed");
     svr->SetConnectionCb([](const TcpConnPtr &con) {
         info("new connection %s",con->m_peer.ToString().c_str());
