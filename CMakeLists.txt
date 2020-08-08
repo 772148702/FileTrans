@@ -1,12 +1,11 @@
 cmake_minimum_required(VERSION 3.2)
 project(handy)
-
 set(CMAKE_CXX_STANDARD 11)
 set(BUILD_HANDY_EXAMPLES TURE)
 include(GNUInstallDirs)
 
 find_package(Threads REQUIRED)
-
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/bin)
 list(APPEND HANDY_SRCS
         ${PROJECT_SOURCE_DIR}/handy/conn.cpp
         ${PROJECT_SOURCE_DIR}/handy/net.cpp
@@ -84,7 +83,7 @@ function(add_hand_test_executable EXECUTABLE_NAME EXECUTABLE_SOURCES)
     install(TARGETS ${EXECUTABLE_NAME} DESTINATION ${CMAKE_INSTALL_BINDIR})
 endfunction()
 
-add_handy_executable(serverMain fileSC/servermain.cpp)
+
 
 if(BUILD_HANDY_TEST)
     add_hand_test_executable(test_port   test/test_port.cc)
@@ -100,8 +99,10 @@ if(BUILD_HANDY_TEST)
     add_hand_test_executable(test_clientCommander test/test_clientCommander.cpp)
 endif(BUILD_HANDY_TEST)
 
-#configure_file(test_clientCommander  ${PROJECT_SOURCE_DIR}/bin/client  COPYONLY)
-#configure_file(test_fileServer  ${PROJECT_SOURCE_DIR}/bin/server  COPYONLY)
+add_handy_executable(serverMain fileSC/serverMain.cpp )
+add_handy_executable(clientMain fileSC/clientMain.cpp )
+configure_file(${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/clientMain  ${PROJECT_SOURCE_DIR}/bin/client  COPYONLY)
+configure_file(${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/serverMain  ${PROJECT_SOURCE_DIR}/bin/server  COPYONLY)
 
 ##add_handy_executable(epoll raw-examples/epoll.cpp)
 

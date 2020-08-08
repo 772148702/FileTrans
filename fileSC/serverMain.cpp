@@ -1,19 +1,11 @@
 //
-// Created by Shinelon on 2020/5/3.
+// Created by Shinelon on 2020/5/5.
 //
 
-#include "test_harness.h"
-#include "handy/net.h"
-#include "handy/logging.h"
-#include "port_posix.h"
-#include "conn.h"
-#include "fileSC/fileServer.h"
-using namespace handy;
-using namespace handy::port;
 
-
-TEST(test::TestBase,FileServer)
-{
+#include "fileServer.h"
+#include <memory>
+int main() {
     MultiBase base(4);
     std::shared_ptr<FileServer> svr = FileServer::StartServer(&base, "", 8081);
     exitif(svr == NULL, "start tcp server failed");

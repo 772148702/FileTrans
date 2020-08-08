@@ -187,7 +187,7 @@ void InputCommanderClient::InputCommandToClient(EventBase *base, const std::stri
             } else {
                 info("file %s not exist",res[1].c_str());
             }
-        } else if(res[0]=="get" &&res.size()==2){
+        } else if(res[0]=="receive" &&res.size()==2){
             if(fileClient->ReceFileReq(res[1])) {
                 info("receive file %s request send",res[1].c_str());
             } else {
@@ -201,9 +201,15 @@ void InputCommanderClient::InputCommandToClient(EventBase *base, const std::stri
               if(fileClient->LsServerCurrentPath()) {
                   info("send lsServer req");
               }
-        } else if (res[0]=="cd"&&res.size()==2) {
+        } else if (res[0]=="cdServer"&&res.size()==2) {
             if(fileClient->CdServerDir(res[1])) {
                 info("cd %s",res[1].c_str());
+            }
+        } else if(res[0]=="cd"&&res.size()==2) {
+            if(ChangeDir(res[1])) {
+                info("change dir successful!");
+            } else {
+                info("change failed, please check target dir!");
             }
         } else if(res[0]=="pwd"&&res.size()==1) {
             std::string out;
@@ -214,6 +220,8 @@ void InputCommanderClient::InputCommandToClient(EventBase *base, const std::stri
             info("send Server Dir req");
         } else if(res[0]=="exit") {
                 return ;
+        } else {
+            info("wrong commands");
         }
 
 

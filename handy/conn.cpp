@@ -74,11 +74,12 @@ namespace  handy {
                 if(m_pChannel->WriteEnable()) {
                     m_outbuffer.Absorb(buf);
                 }
-                //如果是m_outbuffer自己
+                //send data
                 if(buf.Size()) {
                     ssize_t sended = Isend(buf.Begin(), buf.Size());
                     buf.Consume(sended);
                 }
+                //save rest data
                 if (buf.Size()) {
                     m_outbuffer.Absorb(buf);
                     if (!m_pChannel->WriteEnable()) {
